@@ -1,3 +1,5 @@
+'use client'
+
 import SectionHeader from '@/components/SectionHeader'
 
 const problems = [

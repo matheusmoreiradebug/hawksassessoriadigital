@@ -1,3 +1,5 @@
+'use client'
+
 import HawksLogo from './HawksLogo'
 
 export default function Footer() {
