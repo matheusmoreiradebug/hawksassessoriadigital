@@ -12,13 +12,60 @@ const navLinks = [
   { href: '#processo', label: 'Processo' },
 ]
 
+const linkStyle: React.CSSProperties = {
+  fontSize: '13px',
+  fontWeight: 400,
+  color: 'var(--gray-300)',
+  textDecoration: 'none',
+  letterSpacing: '0.02em',
+  transition: 'color 0.2s',
+}
+
+const ghostBtnStyle: React.CSSProperties = {
+  fontSize: '13px',
+  fontWeight: 500,
+  color: 'var(--gray-300)',
+  background: 'transparent',
+  padding: '9px 16px',
+  borderRadius: '8px',
+  border: '1px solid rgba(255,255,255,0.08)',
+  textDecoration: 'none',
+  transition: 'all 0.25s',
+  fontFamily: 'var(--font-sora)',
+  cursor: 'pointer',
+}
+
+const goldBtnStyle: React.CSSProperties = {
+  fontSize: '13px',
+  fontWeight: 600,
+  color: '#050507',
+  background: 'linear-gradient(135deg, #c9a84c 0%, #e8c97a 100%)',
+  padding: '10px 22px',
+  borderRadius: '8px',
+  textDecoration: 'none',
+  transition: 'all 0.25s',
+  boxShadow: '0 0 30px rgba(201,168,76,0.25)',
+  fontFamily: 'var(--font-sora)',
+  cursor: 'pointer',
+  display: 'inline-flex',
+  alignItems: 'center',
+}
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
+    const onResize = () => setIsMobile(window.innerWidth < 768)
+    onScroll()
+    onResize()
     window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
+    window.addEventListener('resize', onResize)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onResize)
+    }
   }, [])
 
   return (
@@ -39,6 +86,7 @@ export default function Navbar() {
         padding: '0 5%',
         background: scrolled ? 'rgba(5,5,7,0.94)' : 'rgba(5,5,7,0.6)',
         backdropFilter: 'blur(20px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(20px) saturate(180%)',
         borderBottom: scrolled
           ? '1px solid rgba(201,168,76,0.12)'
           : '1px solid rgba(255,255,255,0.05)',
@@ -59,115 +107,95 @@ export default function Navbar() {
             letterSpacing: '-0.02em',
           }}
         >
-          Hawks
-          <span style={{ color: 'var(--gold)' }}>.</span>
+          Hawks<span style={{ color: 'var(--gold)' }}>.</span>
         </span>
       </a>
 
       {/* Desktop Links */}
-      <ul
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '36px',
-          listStyle: 'none',
-        }}
-        className="hidden md:flex"
-      >
-        {navLinks.map((link) => (
-          <li key={link.href}>
-            <a
-              href={link.href}
-              style={{
-                fontSize: '13px',
-                fontWeight: 400,
-                color: 'var(--gray-300)',
-                textDecoration: 'none',
-                letterSpacing: '0.02em',
-                transition: 'color 0.2s',
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--white)')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--gray-300)')}
-            >
-              {link.label}
-            </a>
-          </li>
-        ))}
-      </ul>
+      {!isMobile && (
+        <ul style={{ display: 'flex', alignItems: 'center', gap: '36px', listStyle: 'none' }}>
+          {navLinks.map((link) => (
+            <li key={link.href}>
+              <a
+                href={link.href}
+                style={linkStyle}
+                onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--white)')}
+                onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--gray-300)')}
+              >
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
 
-      {/* CTAs */}
-      <div className="hidden md:flex" style={{ gap: '12px', alignItems: 'center' }}>
-        <a href="#pegasus" className="btn-ghost-nav">Conhecer Pegasus</a>
-        <a href="#cta-final" className="btn-gold-nav">Diagnóstico Gratuito</a>
-      </div>
-
-      {/* Mobile hamburger trigger */}
-      <button
-        id="ham-btn"
-        className="md:hidden"
-        style={{
-          background: 'none',
-          border: 'none',
-          cursor: 'pointer',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '5px',
-          padding: '8px',
-        }}
-        aria-label="Abrir menu"
-        onClick={() => {
-          const menu = document.getElementById('mobile-menu')
-          if (menu) menu.classList.add('open')
-        }}
-      >
-        {[0, 1, 2].map((i) => (
-          <span
-            key={i}
-            style={{
-              width: '22px',
-              height: '1.5px',
-              background: 'var(--gray-300)',
-              display: 'block',
+      {/* Desktop CTAs */}
+      {!isMobile && (
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+          <a
+            href="#pegasus"
+            style={ghostBtnStyle}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = 'var(--white)'
+              e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)'
+              e.currentTarget.style.background = 'rgba(255,255,255,0.05)'
             }}
-          />
-        ))}
-      </button>
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = 'var(--gray-300)'
+              e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'
+              e.currentTarget.style.background = 'transparent'
+            }}
+          >
+            Conhecer Pegasus
+          </a>
+          <a
+            href="#cta-final"
+            style={goldBtnStyle}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-1px)'
+              e.currentTarget.style.boxShadow = '0 0 50px rgba(201,168,76,0.4)'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = ''
+              e.currentTarget.style.boxShadow = '0 0 30px rgba(201,168,76,0.25)'
+            }}
+          >
+            Diagnóstico Gratuito
+          </a>
+        </div>
+      )}
 
-      <style jsx>{`
-        .btn-ghost-nav {
-          font-size: 13px;
-          font-weight: 500;
-          color: var(--gray-300);
-          background: transparent;
-          padding: 9px 16px;
-          border-radius: 8px;
-          border: 1px solid rgba(255, 255, 255, 0.08);
-          text-decoration: none;
-          transition: all 0.25s;
-          font-family: var(--font-sora);
-        }
-        .btn-ghost-nav:hover {
-          color: var(--white);
-          border-color: rgba(255, 255, 255, 0.2);
-          background: rgba(255, 255, 255, 0.05);
-        }
-        .btn-gold-nav {
-          font-size: 13px;
-          font-weight: 600;
-          color: #050507;
-          background: linear-gradient(135deg, #c9a84c 0%, #e8c97a 100%);
-          padding: 10px 22px;
-          border-radius: 8px;
-          text-decoration: none;
-          transition: all 0.25s;
-          box-shadow: 0 0 30px rgba(201, 168, 76, 0.25);
-          font-family: var(--font-sora);
-        }
-        .btn-gold-nav:hover {
-          transform: translateY(-1px);
-          box-shadow: 0 0 50px rgba(201, 168, 76, 0.4);
-        }
-      `}</style>
+      {/* Mobile hamburger */}
+      {isMobile && (
+        <button
+          style={{
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '5px',
+            padding: '8px',
+          }}
+          aria-label="Abrir menu"
+          onClick={() => {
+            const menu = document.getElementById('mobile-menu')
+            if (menu) menu.style.display = 'flex'
+          }}
+        >
+          {[0, 1, 2].map((i) => (
+            <span
+              key={i}
+              style={{
+                width: '22px',
+                height: '1.5px',
+                background: 'var(--gray-300)',
+                display: 'block',
+              }}
+            />
+          ))}
+        </button>
+      )}
     </motion.nav>
   )
 }

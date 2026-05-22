@@ -10,86 +10,91 @@ const navLinks = [
   { href: '#processo', label: 'Processo' },
 ]
 
+const overlayStyle: React.CSSProperties = {
+  position: 'fixed',
+  inset: 0,
+  zIndex: 999,
+  background: 'rgba(5,5,7,0.98)',
+  backdropFilter: 'blur(20px)',
+  WebkitBackdropFilter: 'blur(20px)',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: '32px',
+  display: 'none',
+}
+
+const linkStyle: React.CSSProperties = {
+  fontSize: '24px',
+  fontWeight: 600,
+  color: 'var(--gray-200)',
+  textDecoration: 'none',
+  transition: 'color 0.2s',
+  fontFamily: 'var(--font-sora)',
+}
+
+const closeBtnStyle: React.CSSProperties = {
+  position: 'absolute',
+  top: '20px',
+  right: '20px',
+  background: 'none',
+  border: 'none',
+  fontSize: '24px',
+  color: 'var(--gray-400)',
+  cursor: 'pointer',
+  padding: '12px',
+  lineHeight: 1,
+}
+
+const ctaStyle: React.CSSProperties = {
+  fontSize: '16px',
+  fontWeight: 600,
+  color: '#050507',
+  background: 'linear-gradient(135deg, #c9a84c 0%, #e8c97a 100%)',
+  padding: '14px 32px',
+  borderRadius: '10px',
+  textDecoration: 'none',
+  fontFamily: 'var(--font-sora)',
+  marginTop: '16px',
+}
+
 export default function MobileMenu() {
   const close = () => {
     const menu = document.getElementById('mobile-menu')
-    if (menu) menu.classList.remove('open')
+    if (menu) menu.style.display = 'none'
   }
 
   useEffect(() => {
-    document.querySelectorAll('.mob-link').forEach((l) =>
+    document.querySelectorAll('.mob-nav-link').forEach((l) =>
       l.addEventListener('click', close)
     )
+    return () => {
+      document.querySelectorAll('.mob-nav-link').forEach((l) =>
+        l.removeEventListener('click', close)
+      )
+    }
   }, [])
 
   return (
-    <>
-      <div id="mobile-menu" aria-hidden="true">
-        <button onClick={close} aria-label="Fechar menu" className="close-btn">
-          &#10005;
-        </button>
-        {navLinks.map((link) => (
-          <a
-            key={link.href}
-            href={link.href}
-            className="mob-link"
-          >
-            {link.label}
-          </a>
-        ))}
-        <a href="#cta-final" className="mob-cta mob-link">
-          Diagnóstico Gratuito
+    <div id="mobile-menu" style={overlayStyle}>
+      <button onClick={close} aria-label="Fechar menu" style={closeBtnStyle}>
+        &#10005;
+      </button>
+      {navLinks.map((link) => (
+        <a
+          key={link.href}
+          href={link.href}
+          className="mob-nav-link"
+          style={linkStyle}
+          onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--gold)')}
+          onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--gray-200)')}
+        >
+          {link.label}
         </a>
-      </div>
-
-      <style jsx>{`
-        #mobile-menu {
-          display: none;
-          position: fixed;
-          inset: 0;
-          z-index: 999;
-          background: rgba(5, 5, 7, 0.98);
-          backdrop-filter: blur(20px);
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          gap: 32px;
-        }
-        #mobile-menu.open {
-          display: flex;
-        }
-        .close-btn {
-          position: absolute;
-          top: 20px;
-          right: 20px;
-          background: none;
-          border: none;
-          font-size: 24px;
-          color: var(--gray-400);
-          cursor: pointer;
-          padding: 12px;
-        }
-        .mob-link {
-          font-size: 24px;
-          font-weight: 600;
-          color: var(--gray-200);
-          text-decoration: none;
-          transition: color 0.2s;
-          font-family: var(--font-sora);
-        }
-        .mob-link:hover {
-          color: var(--gold);
-        }
-        .mob-cta {
-          font-size: 16px !important;
-          font-weight: 600;
-          color: #050507 !important;
-          background: linear-gradient(135deg, #c9a84c 0%, #e8c97a 100%);
-          padding: 14px 32px;
-          border-radius: 10px;
-          margin-top: 16px;
-        }
-      `}</style>
-    </>
+      ))}
+      <a href="#cta-final" className="mob-nav-link" style={ctaStyle}>
+        Diagnóstico Gratuito
+      </a>
+    </div>
   )
 }
