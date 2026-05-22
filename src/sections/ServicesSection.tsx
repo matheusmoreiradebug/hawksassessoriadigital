@@ -1,3 +1,6 @@
+'use client'
+
+import { useEffect, useState } from 'react'
 import SectionHeader from '@/components/SectionHeader'
 import Button from '@/components/Button'
 
@@ -45,6 +48,15 @@ const services = [
 ]
 
 export default function ServicesSection() {
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 900)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
+
   return (
     <section
       id="services"
@@ -59,8 +71,8 @@ export default function ServicesSection() {
           maxWidth: '1200px',
           margin: '0 auto',
           display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '80px',
+          gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+          gap: isMobile ? '48px' : '80px',
           alignItems: 'start',
         }}
       >
@@ -176,13 +188,7 @@ export default function ServicesSection() {
         </div>
       </div>
 
-      <style jsx>{`
-        @media (max-width: 900px) {
-          div[style*="grid-template-columns: 1fr 1fr"] {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
+
     </section>
   )
 }

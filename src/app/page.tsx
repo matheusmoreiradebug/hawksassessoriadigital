@@ -12,6 +12,17 @@ import CtaFinalSection from '@/sections/CtaFinalSection'
 import Footer from '@/components/Footer'
 import ScrollRevealProvider from '@/components/ScrollRevealProvider'
 
+function Divider() {
+  return (
+    <div
+      style={{
+        height: '1px',
+        background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent)',
+      }}
+    />
+  )
+}
+
 export default function Home() {
   return (
     <>
@@ -21,30 +32,23 @@ export default function Home() {
       <ScrollRevealProvider>
         <main>
           <HeroSection />
-          <div className="divider" />
+          <Divider />
           <ProblemsSection />
-          <div className="divider" />
+          <Divider />
           <ServicesSection />
-          <div className="divider" />
+          <Divider />
           <PegasusSection />
-          <div className="divider" />
+          <Divider />
           <DiferencialSection />
-          <div className="divider" />
+          <Divider />
           <CasesSection />
-          <div className="divider" />
+          <Divider />
           <ProcessoSection />
-          <div className="divider" />
+          <Divider />
           <CtaFinalSection />
         </main>
         <Footer />
       </ScrollRevealProvider>
-
-      <style jsx global>{`
-        .divider {
-          height: 1px;
-          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
-        }
-      `}</style>
     </>
   )
 }
